@@ -1,0 +1,43 @@
+/* Variables - colors */
+$black: #000;
+$white: #fff;
+$grey: #cccccc;
+$grey_medium: #999999;
+$grey_light: #eaeaea;
+$yellow: #ffd200;
+$yellow-hover: #eec400;
+$divider_color: $grey_medium;
+
+/* Variables - paddings */
+$section-padding: 75px;
+$section-padding-mobile: 45px;
+$button-margin: 20px;
+$button-margin_mobile: 10px;
+
+$p: 18px;
+
+/**/
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content
+  }
+  &:-moz-placeholder {
+    @content
+  }
+  &::-moz-placeholder {
+    @content
+  }
+  &:-ms-input-placeholder {
+    @content
+  }
+}
+
+
+$slider-height: 600px;
+$slider-sm-height: 300px;
