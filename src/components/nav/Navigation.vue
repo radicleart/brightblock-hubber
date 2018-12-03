@@ -1,6 +1,6 @@
 <template>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <router-link class="navbar-brand" to="/"><kbd>Open Art Market</kbd></router-link>
+  <router-link class="navbar-brand" to="/"><kbd>BrightBlock Gaia Admin</kbd></router-link>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -12,16 +12,10 @@
           <span class="navbar-toggler-icon"></span>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <router-link class="dropdown-item" to="/artworks">Artworks</router-link>
-          <router-link class="dropdown-item" to="/artists">Artists</router-link>
-          <router-link class="dropdown-item" to="/online-auctions">Auctions</router-link>
-          <router-link class="dropdown-item" to="/search">Search</router-link>
+          <router-link class="dropdown-item" to="/info">Info</router-link>
         </div>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 400px;" v-model="queryString" v-on:keyup.13="searchIndex">
-    </form>
 
     <ul class="navbar-nav" v-if="loggedIn">
       <li class="nav-item dropdown">
@@ -44,7 +38,6 @@
 <script>
 import LoggedInLinks from './LoggedInLinks'
 import LoginModal from './LoginModal'
-import SearchForm from './SearchForm'
 
 // noinspection JSUnusedGlobalSymbols
 export default {
@@ -86,7 +79,6 @@ export default {
     },
   },
   components: {
-    SearchForm,
     LoggedInLinks,
     LoginModal
   }

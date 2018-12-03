@@ -2,10 +2,6 @@
 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
   <div class="navbar-text dropdown-item">{{ username }}</div>
   <div class="dropdown-divider"></div>
-  <router-link class="dropdown-item" to="/my-artworks">My Art Work</router-link>
-  <router-link class="dropdown-item" to="/my-artwork/upload">Upload Artwork</router-link>
-  <router-link class="dropdown-item" to="/my-auctions">My Auctions</router-link>
-  <router-link class="dropdown-item" to="/my-auctions/upload">New Auction</router-link>
   <router-link class="dropdown-item" to="/admin/registrations" v-if="showAdmin">Admin</router-link>
   <router-link class="dropdown-item" to="/account/userData">My Account</router-link>
   <a href="#" class="dropdown-item" @click.prevent="logout">Logout</a>

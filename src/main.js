@@ -5,16 +5,11 @@ import router from './router'
 import App from './App'
 import truncate from 'lodash/truncate'
 import Notifications from 'vue-notification'
-import * as uiv from 'uiv'
-import PrismicVue from 'prismic-vue'
-import linkResolver from './prismic/linkResolver'
 import Vuex from 'vuex'
 import '@/assets/css/main.scss'
 // import { sync } from 'vuex-router-sync'
 import store from '@/storage/store'
 import { CONSTANTS } from '@/storage/constants'
-import notify from '@/services/notify'
-import ethereumService from '@/services/ethereumService'
 import Datetime from 'vue-datetime'
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css'
@@ -30,11 +25,6 @@ Vue.filter('truncate', function (value) {
 Vue.prototype.$appName = 'My App'
 Vue.use(Vuex)
 Vue.use(Notifications)
-Vue.use(uiv, {prefix: 'uiv'})
-Vue.use(PrismicVue, {
-  endpoint: 'https://sybellaio.cdn.prismic.io/api/v2',
-  linkResolver
-})
 Vue.use(Datetime)
 Vue.use(VModal, {
   scrollable: true,
@@ -43,23 +33,6 @@ Vue.use(VModal, {
 })
 
 store.commit('constants', CONSTANTS)
-store.dispatch('fetchServerTime')
-store.dispatch('conversionStore/fetchConversionData').then((conversionData) => {
-  store.dispatch('myAccountStore/fetchMyAccount')
-  store.dispatch('ethStore/fetchClientState').then((clientState) => {
-    ethereumService.connectToBlockChain(clientState)
-    store.dispatch('ethStore/fetchBlockchainItems').then((blockchainItems) => {
-      store.dispatch('myArtworksStore/fetchMyArtworks')
-      store.dispatch('artworkSearchStore/fetchRegisteredArtworks', blockchainItems)
-      store.dispatch('ethStore/receiveBlockchainEvents').then((message) => {
-        if (store.getters['isDebugMode']) {
-          notify.info({title: 'Blockchain Events.', text: message})
-        }
-      })
-    })
-  })
-  store.dispatch('myAuctionsStore/fetchMyAuctions')
-})
 
 /* eslint-disable no-new */
 new Vue({

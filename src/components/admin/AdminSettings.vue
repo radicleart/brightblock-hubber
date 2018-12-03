@@ -55,43 +55,11 @@
     <div class="col-sm-2"></div>
     <div class="col-sm-10">{{gaiaFileResult}}</div>
   </div>
-
-  <h5 class="mt-3">Webrtc Settings</h5>
-  <div class="row">
-    <div class="col-sm-2">Tokbox API:</div>
-    <div class="col-sm-10">{{ constants.apiKey }}</div>
-  </div>
-
-  <h5 class="mt-3">Ethereum Settings</h5>
-  <div class="row">
-    <div class="col-sm-2">Contract API:</div>
-    <div class="col-sm-10">{{ clientState.contractAddress }}</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Load Contract:</div>
-    <div class="col-sm-10"><input type="text" class="form-control" v-model="contractAddress" placeholder="drop in contract address then reload page: 0x..." v-on:keyup.13="loadContract"/></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Client:</div>
-    <div class="col-sm-10">{{ clientState.client }}</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Meta Mask:</div>
-    <div class="col-sm-10">{{ clientState.metaMaskNetwork.networkId }} ({{ clientState.metaMaskNetwork.networkName }}</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Expected:</div>
-    <div class="col-sm-10">{{ networkExpected }}</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Items Registered:</div>
-    <div class="col-sm-10">{{ clientState.numbItems }}</div>
-  </div>
 </div>
+
 </template>
 
 <script>
-import ethereumService from '@/services/ethereumService'
 import axios from 'axios'
 
 const gaiaAuthToken = 'v1:eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJnYWlhQ2hhbGxlbmdlIjoiW1wiZ2FpYWh1YlwiLFwiMjAxOFwiLFwiXCIsXCJibG9ja3N0YWNrX3N0b3JhZ2VfcGxlYXNlX3NpZ25cIl0iLCJodWJVcmwiOiJodHRwczovL2dhaWEuYnJpZ2h0YmxvY2sub3JnIiwiaXNzIjoiMDIyNmVlZjk2MDI4YWYwMTQ1M2YwYzk2NGE0MTcxMGEzZDgwNGQ3MGY2MTgyOTZkMGVjMzczY2MxMGFhYjEwNjM4Iiwic2FsdCI6ImRmODk3YWRkMjVjZDBiNjE1MjUxZjViMmY1OGI3ODllIn0.FoeOdvMqWFU9tqVtToUHE7axjsA0YK_YArhFCXQ0eytRvJbkeW2S1h2V_iQF2311wq322CaPoIRZIxC6Rgqccg'
@@ -101,11 +69,6 @@ export default {
     return {
       gaiaHubUrl: '',
       address: '',
-      network: '',
-      networkExpected: '',
-      contract: '',
-      numberOfItems: '',
-      contractAddress: '',
       gaiaListResult: [],
       gaiaResult: null,
       gaiaStoreResult: null,
@@ -117,8 +80,6 @@ export default {
     let hubJSON = JSON.parse(hubConfig)
     this.address = hubJSON.address
     this.gaiaHubUrl = this.$store.state.constants.gaiaHubUrl
-    this.network = ethereumService.getNetworkType()
-    this.networkExpected = process.env.ETHEREUM_NETWORK
   },
   methods: {
     toggleDebugMode () {
@@ -209,24 +170,14 @@ export default {
           $self.gaiaFileResult = e.message
         })
     },
-    loadContract () {
-      ethereumService.loadContract(this.contractAddress)
-    },
   },
   computed: {
-    clientState () {
-      let clientState = this.$store.state.ethStore.clientState
-      return clientState
-    },
     debugMode () {
       let debugMode = this.$store.getters['isDebugMode']
       return debugMode
     },
     constants () {
       return this.$store.state.constants
-    },
-    localComputed () {
-      return 'hi there!'
     },
   },
   components: {
