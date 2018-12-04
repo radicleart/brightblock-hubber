@@ -1,26 +1,22 @@
 <template>
-<section class="container wide mt-5">
-  <div class="row">
-    <div class="col-sm-2">
-      <admin-actions/>
+  <section class="container wide mt-5">
+    <div class="row">
+      <div class="col-sm-2"><admin-actions /></div>
+      <router-view></router-view>
     </div>
-    <router-view></router-view>
-  </div>
-</section>
+  </section>
 </template>
 
 <script>
-import AdminActions from '@/components/admin/AdminActions'
+import AdminActions from "@/components/admin/AdminActions";
 
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
-  mounted () {
-  },
+  mounted() {},
   components: {
     AdminActions
   }
-}
+};
 </script>

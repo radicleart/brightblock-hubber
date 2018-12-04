@@ -1,38 +1,11 @@
 <template>
-<div>
-  <notifications position="bottom right" group="artwork-actions" />
-  <div class="main">
-    <navigation/>
-    <router-view></router-view>
+  <div id="material-kit">
+    <div :class="{'nav-open': NavbarStore.showNavbar}">
+      <router-view name="header"/>
+      <div>
+        <router-view/>
+      </div>
+      <router-view name="footer"/>
+    </div>
   </div>
-  <app-footer/>
-</div>
 </template>
-
-<script>
-import Navigation from '@/components/nav/Navigation'
-import AppFooter from './components/common/AppFooter'
-
-export default {
-  name: 'App',
-  data () {
-    return {
-      error: null,
-      metamask: {},
-      connected: false,
-      accounts: {},
-    }
-  },
-  created () {
-  },
-  methods: {
-    continueOnward: function () {
-      this.error = undefined
-    },
-  },
-  components: {
-    AppFooter,
-    Navigation,
-  }
-}
-</script>

@@ -1,0 +1,10 @@
+{
+  "name": "Open Art Market",
+  "start_url": "https://www.openartmart.org",
+  "description": "A decentralised art market and auction platform.",
+  "icons": [{
+    "src": "https://www.openartmart.org/static/images/about-us.jpg",
+    "sizes": "192x192",
+    "type": "image/png"
+  }]
+}

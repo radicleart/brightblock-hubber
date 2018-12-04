@@ -1,25 +1,22 @@
 {
-  "name": "brightblock-ui",
-  "version": "1.0.8",
-  "description": "Brighton Blockchain Website - Decentralised applications built on blockstack infrastructure.",
-  "author": "Mike Cohen <mjoecohen@gmail.com>",
+  "name": "Open_Artem",
+  "author": "Mike Cohen",
+  "description": "Vue Material Kit",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
-    "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "stage": "node build/build.staging.js",
-    "build": "node build/build.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "dev": "npm run serve",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run dev"
   },
   "dependencies": {
-    "blockstack": "^18.0.2",
-    "bs58": "^4.0.1",
-    "crypto-js": "^3.1.9-1",
-    "vuex": "^3.0.1",
-    "vuex-router-sync": "^5.0.0",
+    "@babel/core": "^7.1.6",
+    "ajv": "^6.6.1",
+    "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
+    "blockstack": "^18.1.0",
     "nouislider": "11.1.0",
     "v-tooltip": "2.0.0-rc.33",
     "vue": "2.5.17",
@@ -27,24 +24,16 @@
     "vue-clickaway": "2.2.2",
     "vue-lazyload": "1.2.6",
     "vue-material": "1.0.0-beta-10.2",
-    "vue-router": "3.0.1"
+    "vue-router": "^2.8.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "3.0.1",
     "@vue/cli-plugin-eslint": "3.0.1",
     "@vue/cli-service": "3.0.1",
-    "@vue/eslint-config-prettier": "3.0.1",
+    "@vue/eslint-config-prettier": "^3.0.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "node-sass": "4.9.3",
     "sass-loader": "7.1.0",
-    "vue-template-compiler": "2.5.17",
-  },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "vue-template-compiler": "2.5.17"
+  }
 }
