@@ -11,7 +11,8 @@
             <div class="brand">
               <h1>Hubber</h1>
               <h3>
-                A decentralised application for configuring and running a Gaia Hub.
+                A decentralised application for configuring and running a Gaia
+                Hub.
               </h3>
             </div>
           </div>
@@ -20,9 +21,7 @@
     </parallax>
     <div class="main main-raised">
       <div class="section section-basic">
-        <div class="container">
-          <side-car-admin/>
-        </div>
+        <div class="container"><side-car-admin /></div>
       </div>
     </div>
   </div>
