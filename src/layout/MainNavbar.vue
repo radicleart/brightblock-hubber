@@ -2,14 +2,16 @@
   <md-toolbar
     id="toolbar"
     md-elevation="0"
-    class="md-warning md-absolute"
+    class="md-white md-absolute"
     :class="extraNavClasses"
     :color-on-scroll="colorOnScroll"
   >
     <div class="md-toolbar-row md-collapse-lateral">
       <div class="md-toolbar-section-start">
         <h3 class="md-title">
-          <router-link to="/" style="color: white;">Open Artem</router-link>
+          <router-link to="/" style="color: white;"
+            ><span class="md-display-2">Hubber</span></router-link
+          >
         </h3>
       </div>
       <div class="md-toolbar-section-end">
@@ -44,8 +46,7 @@
                       </md-button>
                       <ul class="dropdown-menu dropdown-with-icons">
                         <li>
-                          <i class="material-icons">verified_user</i>
-                          <p>{{ username }}</p>
+                          <a class="dropdown-item">{{ username }}</a>
                         </li>
                         <li>
                           <router-link
