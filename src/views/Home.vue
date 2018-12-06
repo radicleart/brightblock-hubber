@@ -11,8 +11,7 @@
             <div class="brand">
               <h1>Hubber</h1>
               <h3>
-                A decentralised application for configuring and running a Gaia
-                Hub.
+                An application for configuring Gaia Hub.
               </h3>
             </div>
           </div>
