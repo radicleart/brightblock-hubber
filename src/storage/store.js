@@ -1,41 +1,40 @@
 // store.js
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { CONSTANTS } from './constants'
-import myAccountStore from './myAccountStore'
-import userProfilesStore from './userProfilesStore'
+import Vue from "vue";
+import Vuex from "vuex";
+import { CONSTANTS } from "./constants";
+import myAccountStore from "./myAccountStore";
+import userProfilesStore from "./userProfilesStore";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
     myAccountStore: myAccountStore,
-    userProfilesStore: userProfilesStore,
+    userProfilesStore: userProfilesStore
   },
   state: {
     constants: {},
-    serverTime: {},
+    serverTime: {}
   },
   getters: {
-    isDebugMode: (state) => {
-      return state.constants.debugMode
+    isDebugMode: state => {
+      return state.constants.debugMode;
     },
-    serverTime: (state) => {
-      return state.serverTime
-    },
+    serverTime: state => {
+      return state.serverTime;
+    }
   },
   mutations: {
-    serverTime (state, serverTime) {
-      state.serverTime = serverTime
+    serverTime(state, serverTime) {
+      state.serverTime = serverTime;
     },
-    constants (state, constants) {
-      state.constants = CONSTANTS
+    constants(state) {
+      state.constants = CONSTANTS;
     },
-    debugMode (state) {
-      state.constants.debugMode = !state.constants.debugMode
-    },
+    debugMode(state) {
+      state.constants.debugMode = !state.constants.debugMode;
+    }
   },
-  actions: {
-  }
-})
-export default store
+  actions: {}
+});
+export default store;

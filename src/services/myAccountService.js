@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios from "axios";
+import CryptoJS from "crypto-js";
 import {
   Person,
   loadUserData,
@@ -6,96 +7,98 @@ import {
   isSignInPending,
   isUserSignedIn,
   redirectToSignIn,
-  decodeToken,
-  hexStringToECPair,
-  publicKeyToAddress,
   signUserOut
-} from 'blockstack'
-import store from '@/storage/store'
+} from "blockstack";
+import store from "@/storage/store";
+
+const HUBBER_SC_KEY = "HUBBER_SC_KEY";
 
 const myAccountService = {
-  myProfile: function () {
+  myProfile: function() {
     let myProfile = {
       loggedIn: false
-    }
-    let account = loadUserData()
+    };
+    let account = loadUserData();
     if (account) {
-      let authResponseToken = account.authResponseToken
-      var privateKey = account.appPrivateKey + '01'
-      // console.log('Private Key: ' + privateKey)
-      privateKey = hexStringToECPair(privateKey).toWIF()
-      // console.log('Private Key WIF: ' + privateKey)
-      let decodedToken = decodeToken(authResponseToken)
-      let publicKey = decodedToken.payload.public_keys[0]
-      // publicKey = hexStringToECPair(publicKey).toWIF()
-      // console.log('Public Key: ' + publicKey)
-      // console.log('Public Address: ' + publicKeyToAddress(publicKey))
-      let showAdmin = account.username === 'mike.personal.id' || account.username.indexOf('brightblock') > -1 || account.username.indexOf('antonio') > -1
-      let person = new Person(account.profile)
+      let person = new Person(account.profile);
       myProfile = {
         loggedIn: true,
-        showAdmin: showAdmin,
         name: person.name(),
         description: person.description(),
         avatarUrl: person.avatarUrl(),
         username: account.username,
         hubUrl: account.hubUrl,
-        apps: account.profile.apps,
-        privateKey: privateKey,
-        publicKey: publicKey,
-        publicAddress: publicKeyToAddress(publicKey),
-        authResponseToken: account.authResponseToken,
-      }
+        apps: account.profile.apps
+      };
     }
-    return myProfile
+    return myProfile;
   },
-  handlePending: function () {
-    handlePendingSignIn().then(function (myProfile) {
-      store.dispatch('myAccountStore/fetchMyAccount')
-      store.dispatch('myArtworksStore/fetchMyArtworks')
-    })
+  encryptContent: function(data, password) {
+    try {
+      var cyphered = CryptoJS.AES.encrypt(JSON.stringify(data), password);
+      localStorage.setItem(HUBBER_SC_KEY, cyphered.toString());
+    } catch (e) {
+      console.log("Error storing encrypted config" + e.message);
+      throw e;
+    }
   },
-  isPending: function () {
-    return isSignInPending()
+  decryptContent: function(data, password) {
+    var cyphered = localStorage.getItem(HUBBER_SC_KEY);
+    var bytes = CryptoJS.AES.decrypt(cyphered, password);
+    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    console.log(decryptedData);
+    return decryptedData;
   },
-  canLogIn: function () {
+  handlePending: function() {
+    handlePendingSignIn().then(function() {
+      store.dispatch("myAccountStore/fetchMyAccount");
+    });
+  },
+  isPending: function() {
+    return isSignInPending();
+  },
+  canLogIn: function() {
     return new Promise(resolve => {
-      axios.get('http://localhost:6270/v1/ping')
+      axios
+        .get("http://localhost:6270/v1/ping")
         .then(response => {
-          resolve(response.data.status === 'alive')
+          resolve(response.data.status === "alive");
         })
         .catch(e => {
-          console.log('No one listening on 6270?')
-          resolve(true)
-        })
-    })
+          console.log("No one listening on 6270?", e);
+          resolve(true);
+        });
+    });
   },
-  isLoggedIn: function () {
+  isLoggedIn: function() {
     if (isUserSignedIn()) {
-      store.dispatch('myAccountStore/fetchMyAccount')
-      return true
+      store.dispatch("myAccountStore/fetchMyAccount");
+      return true;
     } else if (isSignInPending()) {
-      myAccountService.handlePending()
-      return false
+      myAccountService.handlePending();
+      return false;
     } else {
-      return false
+      return false;
     }
   },
-  logout: function (event) {
-    signUserOut(window.location.origin)
-    store.dispatch('myAccountStore/fetchMyAccount')
+  logout: function() {
+    signUserOut(window.location.origin);
+    store.dispatch("myAccountStore/fetchMyAccount");
   },
-  loginMultiPlayer: function (event) {
+  loginMultiPlayer: function() {
     if (!this.isLoggedIn()) {
-      const origin = window.location.origin
-      redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
+      const origin = window.location.origin;
+      redirectToSignIn(origin, origin + "/manifest.json", [
+        "store_write",
+        "publish_data"
+      ]);
     }
   },
-  login: function (event) {
+  login: function() {
     if (!this.isLoggedIn()) {
-      redirectToSignIn()
-      store.dispatch('myAccountStore/fetchMyAccount')
+      redirectToSignIn();
+      store.dispatch("myAccountStore/fetchMyAccount");
     }
   }
-}
-export default myAccountService
+};
+export default myAccountService;

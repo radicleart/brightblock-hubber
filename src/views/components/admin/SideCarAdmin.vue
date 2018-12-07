@@ -4,12 +4,31 @@
   <!-- Select Storage Model -->
   <div class="md-layout-item md-size-100">
     <div class="title">
-      <h3>Select Storage Mode</h3>
+      <h3>Side Car Configuration</h3>
     </div>
-    <div class="flex-column">
-      <md-radio v-model="storageModel" value="shared">Shared</md-radio>
-      <md-radio v-model="storageModel" value="personal">Personal</md-radio>
-    </div>
+    <md-field>
+      <label>Url for accessing your administrative side car</label>
+      <md-input v-model="sideCar.url" type="text"></md-input>
+    </md-field>
+    <md-field>
+      <label>API Key:</label>
+      <md-input v-model="sideCar.apiKey" type="text"></md-input>
+    </md-field>
+    <md-field>
+      <label>Password</label>
+      <md-input v-model="password" type="password" placeholder="password for encrypting your data"></md-input>
+    </md-field>
+    <md-button class="md-primary" @click="saveSideCarConfig">Primary</md-button>
+    <md-progress-bar md-mode="indeterminate" v-if="showProgress"></md-progress-bar>
+    <md-dialog-alert
+        :md-active.sync="result"
+        md-content="Side car setting saved in local storage!"
+        md-confirm-text="Cool!" />
+    <md-dialog-alert
+        :md-active.sync="error"
+        :md-content="errorMessage"
+        md-confirm-text="OK!" />
+
   </div>
   <!-- end Select Storage Model -->
 
@@ -64,12 +83,12 @@
           <h3>Enter S3 Credentials</h3>
         </div>
         <md-field>
-          <label>Url to configure your Gaia Hub</label>
+          <label>Url for accessing you administrative side car</label>
           <md-input v-model="gaiaHubUrl" type="text"></md-input>
         </md-field>
         <md-field>
           <label>Password</label>
-          <md-input v-model="password" type="password"></md-input>
+          <md-input v-model="password" type="password" placeholder="password for encrypting your data"></md-input>
         </md-field>
       </div>
     </div>
@@ -80,12 +99,21 @@
 
 <script>
 import GaiaSettingsNavPills from "./GaiaSettingsNavPills";
+import myAccountService from "@/services/myAccountService";
 export default {
   data() {
     return {
       password: null,
       provider: "dbx",
       storageModel: null,
+      showProgress: false,
+      errorMessage: "",
+      result: false,
+      error: false,
+      sideCar: {
+        url: "https://gaia_admin.brightblock.org",
+        apiKey: "hello"
+      },
       config: {
         configSecret: "",
         serverName: "",
@@ -112,6 +140,45 @@ export default {
     };
   },
   mounted() {},
+  methods: {
+    saveSideCarConfig() {
+      this.showProgress = true;
+      if (!this.validateSideCarConfig()) {
+        this.error = true;
+        this.showProgress = false;
+      } else {
+        let cyphered = myAccountService.encryptContent(
+          this.sideCar,
+          this.password
+        );
+        localStorage.setItem("HUBBER_SIDE_CAR_CONFIG", cyphered);
+        this.showProgress = false;
+        let $self = this;
+        setTimeout(function() {
+          $self.showProgress = false;
+          $self.result = true;
+        }, 2000);
+      }
+    },
+    validateSideCarConfig() {
+      this.errorMessage = "";
+      let valid = true;
+      if (!this.password || this.password.length === 0) {
+        this.errorMessage +=
+          "<br>Please enter a password so we can encrypt your info";
+        valid = false;
+      }
+      if (!this.sideCar.url || !this.sideCar.url.startsWith("https://")) {
+        this.errorMessage += "<br>side car url must start with https://";
+        valid = false;
+      }
+      if (!this.sideCar.apiKey || !this.sideCar.apiKey.length === 0) {
+        this.errorMessage += "<br>side car api key required.";
+        valid = false;
+      }
+      return valid;
+    }
+  },
   computed: {
     gaiaHubUrl() {
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];

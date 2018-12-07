@@ -10,9 +10,7 @@
             <img :src="leaf1" alt="leaf1" class="leaf1" v-show="leafShow" />
             <div class="brand">
               <h1>Hubber</h1>
-              <h3>
-                An application for configuring Gaia Hub.
-              </h3>
+              <h3>An application for configuring Gaia Hub.</h3>
             </div>
           </div>
         </div>

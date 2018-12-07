@@ -7,9 +7,7 @@ import Login from "./views/Login.vue";
 import Profile from "./views/Profile.vue";
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
-import AdminSettings from "./components/admin/AdminSettings";
-import AdminRegistrations from "./components/admin/AdminRegistrations";
-import GaiaSettings from "./components/admin/GaiaSettings";
+import GaiaSettings from "./views/components/admin/GaiaSettings";
 
 Vue.use(Router);
 
@@ -37,32 +35,6 @@ export default new Router({
       path: "/landing",
       name: "landing",
       components: { default: Landing, header: MainNavbar, footer: MainFooter },
-      props: {
-        header: { colorOnScroll: 400 },
-        footer: { backgroundColor: "black" }
-      }
-    },
-    {
-      path: "/admin/settings",
-      name: "adminSettings",
-      components: {
-        default: AdminSettings,
-        header: MainNavbar,
-        footer: MainFooter
-      },
-      props: {
-        header: { colorOnScroll: 400 },
-        footer: { backgroundColor: "black" }
-      }
-    },
-    {
-      path: "/admin/registrations",
-      name: "adminRegistrations",
-      components: {
-        default: AdminRegistrations,
-        header: MainNavbar,
-        footer: MainFooter
-      },
       props: {
         header: { colorOnScroll: 400 },
         footer: { backgroundColor: "black" }

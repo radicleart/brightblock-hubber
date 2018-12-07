@@ -8,7 +8,7 @@ export const CONSTANTS = {
   debugMode: process.env.DEBUG_MODE,
   networkExpected: process.env.ETHEREUM_NETWORK,
   domain: location.origin,
-  artworkRootFileName: 'records_v01.json',
-  auctionsRootFileName: 'auctions_v01.json',
-  gaiaFileName: 'record_',
-}
+  artworkRootFileName: "records_v01.json",
+  auctionsRootFileName: "auctions_v01.json",
+  gaiaFileName: "record_"
+};
