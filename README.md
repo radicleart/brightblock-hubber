@@ -1,176 +1,220 @@
-# [Vue Material Kit](https://demos.creative-tim.com/vue-material-kit) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/home?status=Vue%20Material%20Kit%20-%20Material%20Design%20UI%20Kit%20for%20Vue.js%20https%3A//www.creative-tim.com/product/vue-material-kit%20%23vuejs%20%23ui%20%23kit%20%23vuematerial%20%40creativetim)
+# hubber
 
+> Hubber - Gaia Hub Administration.
 
-![version](https://img.shields.io/badge/version-1.0.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/vue-material-kit.svg)](https://github.com/creativetimofficial/vue-material-kit/issues?q=is%3Aopen+is%3Aissue) [![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/creativetimofficial/vue-material-kit.svg?maxAge=259200)](https://github.com/creativetimofficial/vue-material-kit/issues?q=is%3Aissue+is%3Aclosed) [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/E4aHAQy)
+## Build Setup
 
-![Product Gif](https://s3.amazonaws.com/creativetim_bucket/products/97/original/opt_mk_vue_thumbnail.jpg)
+``` bash
+# install dependencies
+npm install
 
-Vue Material Kit is a beautiful resource built over [Vue Material](https://vuematerial.io/) and [Vuejs](https://vuejs.org/v2/guide/). It will help you get started developing UI Kits in no time. Vue Material Kit is the official Vuejs version of the Original [Material Kit](https://www.creative-tim.com/product/material-kit). Using the UI Kit is pretty simple but requires basic knowledge of Javascript, [Vuejs](https://vuejs.org/v2/guide/) and [Vue Router](https://router.vuejs.org/en/).
+# serve with hot reload at localhost:8080
+npm run dev
 
-We have created it thinking about things you actually need in a dashboard. Vue Material Kit contains handpicked and optimised Vuejs plugins. Everything is designed to fit with one another. As you will be able to see, the dashboard you can access on Creative Tim is a customisation of this product.
+# build for production with minification
+npm run build
 
-Let us know what you think and what we can improve below. And good luck with development!
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
+```
+
+Applciation for managing the settings of a Gaia Hub (see [Blockstack](https://blockstack.org) for more info).
 
 ## Table of Contents
 
-* [Versions](#versions)
-* [Demo](#demo)
-* [Quick Start](#quick-start)
-* [Documentation](#documentation)
-* [File Structure](#file-structure)
-* [Browser Support](#browser-support)
-* [Resources](#resources)
-* [Reporting Issues](#reporting-issues)
-* [Technical Support or Questions](#technical-support-or-questions)
-* [Licensing](#licensing)
-* [Useful Links](#useful-links)
+- [Purpose](#purpose)
+- [Privacy](#privacy)
+- [Configuration](#configuration)
+- [Domains](#domains)
+- [Index API](#index-api)
+- [Search API](#search-api)
 
+## Purpose
 
-## Versions
+Provides customisable search index of user data for decentralised applications. Marketplaces and auctions are
+key examples where specialised search results and filters form the backbone to the rest of the platforms functionality.
+This component provides a way of indexing decentralised user data in an open and transparent way that allows fair
+competition between d-apps and users to evolve.
 
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/html.png" width="60" height="60" />](https://www.creative-tim.com/product/material-kit)
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/react.svg" width="60" height="60" />](https://www.creative-tim.com/product/material-kit-react)
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/vuejs.png" width="60" height="60" />](https://www.creative-tim.com/product/vue-material-kit)
+The indexer starts from a decentralised blockstack user identity. It pulls the apps the user has visited and
+indexes data whose app domain matches one of the domains in the yaml configuration of the indexer.
 
+The indexer can be forked from [open source repository](https://github.com/mjoecohen/brightblock-search). Or can be
+used via;
 
-| Vue | React | HTML |
-| --- | --- | --- |
-| [![Vue Material Kit HTML](https://s3.amazonaws.com/creativetim_bucket/products/97/thumb/opt_mk_vue_thumbnail.jpg)](https://www.creative-tim.com/product/vue-material-kit) | [![Material Kit React](https://s3.amazonaws.com/creativetim_bucket/products/83/thumb/opt_mk_react_thumbnail.jpg)](https://www.creative-tim.com/product/material-kit-react) | [![Material Kit HTML](https://s3.amazonaws.com/creativetim_bucket/products/38/thumb/opt_mk_thumbnail.jpg)](https://www.creative-tim.com/product/material-kit)
+1. shared hosting model - add new d-app domain in configuration,
+2. siloed hosting - pull and run with docker.
 
-## Demo
+## Privacy
 
-- [Start page](https://demos.creative-tim.com/vue-material-kit)
-- [Profile page](https://demos.creative-tim.com/vue-material-kit/#/profile)
-- [Login page ](https://demos.creative-tim.com/vue-material-kit/#/login)
-- [Landing Page](https://demos.creative-tim.com/vue-material-kit/#/landing)
+The indexer can only access unencrypted user data which is publicly visible by default. The intention is to only index data in specific
+fields such as 'title', 'description', 'keywords' and possibly some name/value pairs to enable some advanced range search and filtering.
+It's hoped the community can help standardise both the formats and the allowed fields in such a way that this develops
+transparently to end users going forward - for example standardising end points that enable users to removed their data from index in a straightforward manner.
 
-[View More](https://demos.creative-tim.com/vue-material-kit).
+## Configuration
 
+The data to index is configured via yaml. For example the following chunk of yaml;
+```spring:
+    profiles: staging
+application:
+   blockstackBase: https://core-staging.brightblock.org
+   domains:
+      -  domain: localhost
+         indexFiles:
+            - indexFileName: records_v01.json
+              indexObjType: artwork
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
+         fields:
+            - id
+            - title
+            - description
+            - keywords
+      -  domain: www.brightblock.org
+         indexFiles:
+            - indexFileName: records_v01.json
+              indexObjType: artwork
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
+         fields:
+            - id
+            - title
+            - description
+            - keywords
+```
+will attempt to index data stored under two domains 'localhost' and 'www.brightblock.org'. On finding users who have visited these
+domains it will read from gaia storage the files;
+- records_v01.json
+- auctions_v01.json
 
-## Quick start
-
-Quick start options:
-
-- Download from [Creative Tim](https://www.creative-tim.com/product/vue-material-kit)
-
-
-## Documentation
-The documentation for the Material Kit is hosted at our [website](https://demos.creative-tim.com/vue-material-kit/documentation).
-
-
-## File Structure
-
-Within the download you'll find the following directories and files:
+and within these files it will expect to find an array of json objects at the root of the file in format;
 
 ```
-vue-material-kit/
-
-├── CHANGELOG.md
-├── README.md
-├── babel.config.js
-├── package.json
-├── public
-│   └── index.html
-├── src
-│   ├── App.vue
-│   ├── assets
-│   │   ├── img
-│   │   └── scss
-│   │       ├── material-kit
-│   │       └── material-kit.scss
-│   ├── components
-│   │   ├── Badge.vue
-│   │   ├── Dropdown.vue
-│   │   ├── Modal.vue
-│   │   ├── Pagination.vue
-│   │   ├── Parallax.vue
-│   │   ├── Slider.vue
-│   │   ├── Tabs.vue
-│   │   ├── cards
-│   │   │   ├── LoginCard.vue
-│   │   │   └── NavTabsCard.vue
-│   │   └── index.js
-│   ├── layout
-│   │   ├── MainFooter.vue
-│   │   ├── MainNavbar.vue
-│   │   └── MobileMenu.vue
-│   ├── main.js
-│   ├── plugins
-│   │   ├── globalComponents.js
-│   │   ├── globalDirectives.js
-│   │   ├── globalMixins.js
-│   │   └── material-kit.js
-│   ├── router.js
-│   └── views
-│       ├── Index.vue
-│       ├── Landing.vue
-│       ├── Login.vue
-│       ├── Profile.vue
-│       └── components
-│           ├── BasicElementsSection.vue
-│           ├── JavascriptComponentsSection.vue
-│           ├── NavPillsSection.vue
-│           ├── NavigationSection.vue
-│           ├── NotificationsSection.vue
-│           ├── SmallNavigationSection.vue
-│           ├── TabsSection.vue
-│           └── TypographyImagesSection.vue
-└── vue.config.js
-
+records [
+	{ id: 'some id', title: 'some title', description: 'some description' ...
+]
 ```
 
-## Browser Support
+ignoring any other content. This data will then be indexed in a lucene index with the id as a key along with the domain and object type.
 
-At present, we officially aim to support the last two versions of the following browsers:
+The config value for parameter 'blockstackBase' indicates the blockstack node to ask for user data from. In the hosted version this is a
+blockstack node running on the same server as the search micro-service.
 
-<img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/chrome.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/firefox.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/edge.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/safari.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/opera.png" width="64" height="64">
+## Index API
+
+> value = "/index/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Clears the index out - temporary method for developemnt and test.
+
+> value = "/index/pages/{from}/{to}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Index blockstack names between the pages indicated calls pulls names from [Blockstack API](https://core.blockstack.org/) and then
+updates the index for domain matches between user apps and domains in the yaml config.
+
+> value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Index blockstack names - comma separated list.
+
+> value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Index blockstack names - comma separated list.
+
+> value = "/index/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Add the given indexable object to the index. Post data:
+
+```
+{
+	title: '',
+	description: '',
+	keywords: '',
+	owner: '', // blockstack id of the owner of the record
+	objType: '...',  // in art project these are one of ['auction', 'artwork'] for specific searchs
+	domain: '...',  // the domain of the d-app
+}
+```
+
+> value = "/index/removeRecord/{field}/{value}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
+
+Remove the given record from the index.
+
+```
+field = 'id'
+value = 'value of unique identifier'
+```
+
+Note: this needs more information as single identifier can't be relied on to locate a record uniquely with multiple domains.
 
 
-## Resources
-- [Live Preview](https://demos.creative-tim.com/vue-material-kit)
-- Download Page: https://www.creative-tim.com/product/vue-material-kit
-- Documentation is [here](https://demos.creative-tim.com/vue-material-kit/documentation)
-- License Agreement: https://www.creative-tim.com/license
-- Support: https://www.creative-tim.com/contact-us
-- Issues: [Github Issues Page](https://github.com/creativetimofficial/vue-material-kit/issues)
-- For Front End Development - [Material Kit](https://www.creative-tim.com/product/material-kit)
+## Search API
 
-## Reporting Issues
-We use GitHub Issues as the official bug tracker for the Vue Material Kit. Here are some advices for our users that want to report an issue:
+> value = "/index/names/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
-1. Make sure that you are using the latest version of the Vue Material Kit. Check the `CHANGELOG` from your kit on our [website](https://www.creative-tim.com/).
-2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
-3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
+Fetches all user names so far added to the index - useful for test and dev.
 
-## Technical Support or Questions
+> value = "/index/dapps/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
-If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us) instead of opening an issue.
+Fetches all d-app records so far added to the index - useful for test and dev.
 
-## Licensing
+> value = "/index/names/query/{field}?q=query_string", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
-- Copyright 2018 Creative Tim (https://www.creative-tim.com)
-- Creative Tim [license](https://www.creative-tim.com/license)
+Query the names index. For example if field='apps' and query_string='your domain' this will return the users who have logged in to
+your domain.
 
-## Useful Links
+> value = "/index/dapps/{domain}/{objType}/{field}?q=query_string", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
-- [More products](https://www.creative-tim.com/bootstrap-themes) from Creative Tim
+Query the dapps index. For example if field='title' and query_string='hallo sailor' this will return all records of type 'objType'
+under domain 'domain' whose title contains the full text indexed search words.
 
-- [Vue products](https://www.creative-tim.com/bootstrap-themes/vuejs-themes) from Creative Tim
+## Domains
 
-- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
+### Add Blockstack Id(s) to Index
 
-- [Freebies](https://www.creative-tim.com/bootstrap-themes/free) from Creative Tim
+## Examples
 
-- [Affiliate Program](https://www.creative-tim.com/affiliates/new) (earn money)
+### Add Blockstack Id(s) to Index
 
-##### Social Media
+> https://search.brightblock.org/index/users/mike.personal.id,brightblock.id
 
-Twitter: <https://twitter.com/CreativeTim>
+```
+{
+"failed": false,
+"timestamp": 1542796896542,
+"httpStatus": "OK",
+"details": "Indexing users: [mike.personal.id, brightblock.id] in background.",
+"message": "Success!"
+}
+```
 
-Facebook: <https://www.facebook.com/CreativeTim>
 
-Dribbble: <https://dribbble.com/creativetim>
+> https://search.brightblock.org/index/dapps/staging.transit8.com/artwork/description?q=capitals
 
-Google+: <https://plus.google.com/+CreativetimPage>
-
-Instagram: <https://instagram.com/creativetimofficial>
+```
+{
+"failed": false,
+"timestamp": 1542727510888,
+"httpStatus": "OK",
+"details": [
+{
+"id": "1540550024050",
+"title": "Living in the alley",
+"description": "Block capitals on brick",
+"owner": "mike.personal.id",
+"objType": "artwork",
+"domain": "staging.transit8.com",
+"keywords": "Photography,Illustration.3D,2D,Film & Video,Mix-media"
+}
+],
+"message": "Success!"
+}
+```

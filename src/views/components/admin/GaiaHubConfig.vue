@@ -18,7 +18,7 @@
       <md-dialog-title>Reload Result</md-dialog-title>
       <md-dialog-content>{{hubMessage}}</md-dialog-content>
       <md-dialog-content>Your hub has been reloaded and tested by writing and reading the
-      above data to you storage provider.</md-dialog-content>
+      above data to your storage provider.</md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click="closeDialog">Close</md-button>
       </md-dialog-actions>
@@ -164,7 +164,7 @@
   </div>
 
   <div class="md-layout-item md-size-50 md-xsmall-size-100">
-    <md-button class="md-primary" @click="saveGaiaConfig">Load and Restart Hub</md-button>
+    <md-button class="md-primary" @click="saveGaiaConfig">Upload Config</md-button>
   </div>
 
 </form>
@@ -217,7 +217,7 @@ export default {
       this.gaiaConfig = this.$store.getters["hubberStore/getActiveGaiaConfig"];
       this.$emit(
         "alertUser",
-        "Switched form to original hub settings - press load and restart. "
+        "Switched form to original hub settings - press 'Upload Config'. "
       );
     },
     reloadHub() {
