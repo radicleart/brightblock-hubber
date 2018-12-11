@@ -58,7 +58,7 @@ const myAccountService = {
       return true;
     } else if (isSignInPending()) {
       myAccountService.handlePending();
-      return false;
+      return true;
     } else {
       return false;
     }

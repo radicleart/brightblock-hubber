@@ -103,7 +103,6 @@ const hubberStore = {
           }
         })
           .then(response => {
-            console.log(response.data.message);
             commit("putGaiaConfig", gaiaConfig);
             resolve(response.data.message);
           })
@@ -125,8 +124,8 @@ const hubberStore = {
             Authorization: "Bearer " + apiData.apiKey
           }
         })
+          // eslint-disable-next-line
           .then(response => {
-            console.log(response.data);
             hubberService.writeTestFile(
               function() {
                 hubberService.readTestFile(
@@ -146,7 +145,7 @@ const hubberStore = {
           // eslint-disable-next-line
           .catch(e => {
             // console.log(e);
-            reject("Reload failed...");
+            reject("Error writing test new config - are you logged in?");
           });
       });
     }

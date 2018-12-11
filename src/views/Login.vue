@@ -86,6 +86,11 @@ export default {
       default: require("@/assets/img/profile_city.jpg")
     }
   },
+  mounted() {
+    if (myAccountService.isLoggedIn()) {
+      this.$router.push({ path: "/" });
+    }
+  },
   methods: {
     loginMultiPlayer: () => {
       let res = myAccountService.loginMultiPlayer();

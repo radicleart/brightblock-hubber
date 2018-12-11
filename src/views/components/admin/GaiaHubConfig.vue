@@ -9,7 +9,6 @@
       new settings you'll be given an option to reload the original settings.</md-dialog-content>
       <md-dialog-content>Clicking 'Revert' will switch your hub back to the original settings.</md-dialog-content>
       <md-dialog-actions>
-        <md-button class="md-primary" @click="revertHub">Revert</md-button>
         <md-button class="md-primary" @click="reloadHub">Reload Hub</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -199,8 +198,6 @@ export default {
         );
         return;
       }
-      console.log(JSON.stringify(this.gaiaConfig));
-      console.log(this.gaiaConfig);
       this.$store
         .dispatch("hubberStore/updateGaiaConfig", this.gaiaConfig)
         // eslint-disable-next-line
@@ -218,6 +215,10 @@ export default {
     reloadConfig() {
       this.$store.commit("hubberStore/resetLiveGaiaConfig");
       this.gaiaConfig = this.$store.getters["hubberStore/getActiveGaiaConfig"];
+      this.$emit(
+        "alertUser",
+        "Switched form to original hub settings - press load and restart. "
+      );
     },
     reloadHub() {
       this.reloadDialog = false;
@@ -229,14 +230,10 @@ export default {
           this.reloadResultDialog = true;
           // eslint-disable-next-line
       }).catch(e => {
-          this.$emit("alertUser", e.message);
+          this.$emit("alertUser", e);
         });
     },
     closeDialog() {
-      this.reloadDialog = false;
-      this.reloadResultDialog = false;
-    },
-    revertHub() {
       this.reloadDialog = false;
       this.reloadResultDialog = false;
     },
