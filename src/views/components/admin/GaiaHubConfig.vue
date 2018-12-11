@@ -25,42 +25,48 @@
       </md-dialog-actions>
     </md-dialog>
   </div>
+  <div class="md-layout-item md-size-100 md-xsmall-size-100 md-layout md-alignment-center-right">
+    <span @click="reloadConfig">
+      <md-icon>sync</md-icon>
+      <md-tooltip md-direction="top">load backed up config</md-tooltip>
+    </span>
+  </div>
   <div class="md-layout-item md-size-100 md-xsmall-size-100">
     <p v-for="(error, index) in errors" :key="index" class="text-danger">
       {{error}}
     </p>
   </div>
-  <div class="md-layout-item md-size-50 md-xsmall-size-100">
+  <div class="md-layout-item md-size-50 md-xsmall-size-50">
     <md-field>
       <label>Server</label>
       <md-input v-model="gaiaConfig.serverName" type="text"></md-input>
     </md-field>
   </div>
-  <div class="md-layout-item md-size-50 md-xsmall-size-100">
+  <div class="md-layout-item md-size-50 md-xsmall-size-50">
     <md-field>
       <label>Port</label>
       <md-input v-model="gaiaConfig.port" type="number"></md-input>
     </md-field>
   </div>
-  <div class="md-layout-item md-size-50 md-xsmall-size-100">
+  <div class="md-layout-item md-size-100 md-xsmall-size-100">
     <md-field>
       <label>Bucket</label>
       <md-input v-model="gaiaConfig.bucket" type="text"></md-input>
     </md-field>
   </div>
-  <div class="md-layout-item md-size-50 md-xsmall-size-100">
+  <div class="md-layout-item md-size-100 md-xsmall-size-100">
     <md-field>
       <label>Read Url</label>
       <md-input v-model="gaiaConfig.readURL" type="text"></md-input>
     </md-field>
   </div>
-  <div class="md-layout-item md-size-30 md-xsmall-size-100">
+  <div class="md-layout-item md-size-50 md-xsmall-size-100">
     <md-field>
       <label>List Files Page Size</label>
       <md-input v-model="gaiaConfig.pageSize" type="number"></md-input>
     </md-field>
   </div>
-  <div class="md-layout-item md-size-30 md-xsmall-size-100">
+  <div class="md-layout-item md-size-50 md-xsmall-size-100">
     <md-field>
       <label>Proofs - number of social proofs required of the user.</label>
       <md-input v-model="gaiaConfig.proofsConfig" type="number"></md-input>
@@ -73,7 +79,7 @@
     </md-field>
   </div>
 
-  <div class="md-layout-item md-size-50 md-xsmall-size-100">
+  <div class="md-layout-item md-size-100 md-xsmall-size-100">
     <div class="flex-column">
       <md-checkbox v-model="gaiaConfig.requireCorrectHubUrl">Require Valid Hub Urls</md-checkbox>
     </div>
@@ -102,13 +108,13 @@
     <div class="title">
       <h3>AWS Credentials</h3>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-50">
+    <div class="md-layout-item md-size-100 md-xsmall-size-50">
       <md-field>
         <label>Access Key Id</label>
         <md-input v-model="gaiaConfig.awsCredentials.accessKeyId" type="text"></md-input>
       </md-field>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-50">
+    <div class="md-layout-item md-size-100 md-xsmall-size-50">
       <md-field>
         <label>Secret Access Key</label>
         <md-input v-model="gaiaConfig.awsCredentials.secretAccessKey" type="text"></md-input>
@@ -120,7 +126,7 @@
     <div class="title">
       <h3>Local Disk</h3>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-50">
+    <div class="md-layout-item md-size-100 md-xsmall-size-50">
       <md-field>
         <label>Root Storage Directory</label>
         <md-input v-model="gaiaConfig.diskSettings.storageRootDirectory" type="text"></md-input>
@@ -132,13 +138,13 @@
     <div class="title">
       <h3>Azure Credentials</h3>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-100">
+    <div class="md-layout-item md-size-100 md-xsmall-size-100">
       <md-field>
         <label>Account Key</label>
         <md-input v-model="gaiaConfig.azCredentials.accountKey" type="text"></md-input>
       </md-field>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-100">
+    <div class="md-layout-item md-size-100 md-xsmall-size-100">
       <md-field>
         <label>Account Name</label>
         <md-input v-model="gaiaConfig.azCredentials.accountName" type="text"></md-input>
@@ -150,7 +156,7 @@
     <div class="title">
       <h3>Google Credentials</h3>
     </div>
-    <div class="md-layout-item md-size-50 md-xsmall-size-100">
+    <div class="md-layout-item md-size-100 md-xsmall-size-100">
       <md-field>
         <label>Project Id</label>
         <md-input v-model="gaiaConfig.gcCredentials.projectId" type="text"></md-input>
@@ -167,9 +173,6 @@
 
 <script>
 export default {
-  props: {
-    configName: null
-  },
   data() {
     return {
       gaiaConfig: {},
@@ -180,9 +183,7 @@ export default {
     };
   },
   mounted() {
-    let gaiaConfig = this.$store.getters["hubberStore/getGaiaConfig"](
-      this.configName
-    );
+    let gaiaConfig = this.$store.getters["hubberStore/getActiveGaiaConfig"];
     if (!gaiaConfig) {
       gaiaConfig = {};
     }
@@ -213,6 +214,10 @@ export default {
             "Unable to contact hub using these settings. "
           );
         });
+    },
+    reloadConfig() {
+      this.$store.commit("hubberStore/resetLiveGaiaConfig");
+      this.gaiaConfig = this.$store.getters["hubberStore/getActiveGaiaConfig"];
     },
     reloadHub() {
       this.reloadDialog = false;

@@ -5,25 +5,21 @@ const hubberStore = {
   namespaced: true,
   state: {
     apiData: null,
-    gaiaConfigs: [],
+    password: null,
+    activeGaiaConfig: null,
     gaiaConfigBackup: null
   },
   getters: {
-    getGaiaConfig: state => configName => {
-      if (state.gaiaConfigs.length === 0) {
-        return state.gaiaConfigBackup;
+    getActiveGaiaConfig: state => {
+      if (!state.activeGaiaConfig) {
+        let backup = hubberService.fetchStashedGaiaData(state.password);
+        state.activeGaiaConfig = backup;
       }
-      let configs = state.gaiaConfigs.filter(
-        gaiaConfig => gaiaConfig.configName === configName
-      );
-      if (!configs) {
-        return state.gaiaConfigs[0];
-      } else {
-        return configs[0];
-      }
+      return state.activeGaiaConfig;
     },
     getBackedUpGaiaConfig: state => {
-      return state.gaiaConfigBackup;
+      let backup = hubberService.fetchStashedGaiaData(state.password);
+      return backup;
     },
     getApiData: state => {
       return state.apiData;
@@ -32,13 +28,45 @@ const hubberStore = {
   mutations: {
     putApiData(state, data) {
       state.apiData = data.apiData;
-      hubberService.stashApiData(data.apiData, data.password);
+      state.password = data.password;
+      hubberService.stashApiData(state.apiData, state.password);
     },
     putLiveGaiaConfig(state, gaiaConfig) {
-      state.gaiaConfigBackup = gaiaConfig;
+      let backup = hubberService.fetchStashedGaiaData(state.password);
+      if (!backup) {
+        state.gaiaConfigBackup = gaiaConfig;
+        hubberService.stashLiveConfig(gaiaConfig, state.password);
+      }
+    },
+    resetLiveGaiaConfig(state) {
+      let backup = hubberService.fetchStashedGaiaData(state.password);
+      state.activeGaiaConfig = backup;
+    },
+    putGaiaConfig(state, gaiaConfig) {
+      state.activeGaiaConfig = gaiaConfig;
+      hubberService.stashActiveGaiaConfig(gaiaConfig, state.password);
     }
   },
   actions: {
+    isApiDataValid({ state }) {
+      return new Promise((resolve, reject) => {
+        let configExists = hubberService.checkForStashedApiData();
+        if (configExists && state.apiData) {
+          if (state.apiData) {
+            this.$store
+              .dispatch("hubberStore/fetchGaiaConfig")
+              // eslint-disable-next-line
+              .then(gaiaConfig => {
+                resolve(true);
+              })
+              // eslint-disable-next-line
+            .catch(e => {
+                reject(false);
+              });
+          }
+        }
+      });
+    },
     fetchGaiaConfig({ state, commit }) {
       return new Promise((resolve, reject) => {
         let apiData = state.apiData;
@@ -58,12 +86,11 @@ const hubberStore = {
           })
           // eslint-disable-next-line
           .catch(e => {
-            // console.log(e);
             reject(false);
           });
       });
     },
-    updateGaiaConfig({ state }, gaiaConfig) {
+    updateGaiaConfig({ state, commit }, gaiaConfig) {
       return new Promise((resolve, reject) => {
         let apiData = state.apiData;
         axios({
@@ -77,6 +104,7 @@ const hubberStore = {
         })
           .then(response => {
             console.log(response.data.message);
+            commit("putGaiaConfig", gaiaConfig);
             resolve(response.data.message);
           })
           // eslint-disable-next-line
