@@ -3,14 +3,14 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { CONSTANTS } from "./constants";
 import myAccountStore from "./myAccountStore";
-import userProfilesStore from "./userProfilesStore";
+import hubberStore from "./hubberStore";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
     myAccountStore: myAccountStore,
-    userProfilesStore: userProfilesStore
+    hubberStore: hubberStore
   },
   state: {
     constants: {},

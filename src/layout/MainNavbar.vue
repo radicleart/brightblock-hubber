@@ -57,14 +57,6 @@
                           >
                         </li>
                         <li>
-                          <router-link
-                            class="dropdown-item"
-                            to="/account/userData"
-                            ><i class="material-icons">account_circle</i> My
-                            Account</router-link
-                          >
-                        </li>
-                        <li>
                           <a
                             href="#"
                             class="dropdown-item"

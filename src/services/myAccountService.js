@@ -1,5 +1,5 @@
 import axios from "axios";
-import CryptoJS from "crypto-js";
+
 import {
   Person,
   loadUserData,
@@ -10,8 +10,6 @@ import {
   signUserOut
 } from "blockstack";
 import store from "@/storage/store";
-
-const HUBBER_SC_KEY = "HUBBER_SC_KEY";
 
 const myAccountService = {
   myProfile: function() {
@@ -32,22 +30,6 @@ const myAccountService = {
       };
     }
     return myProfile;
-  },
-  encryptContent: function(data, password) {
-    try {
-      var cyphered = CryptoJS.AES.encrypt(JSON.stringify(data), password);
-      localStorage.setItem(HUBBER_SC_KEY, cyphered.toString());
-    } catch (e) {
-      console.log("Error storing encrypted config" + e.message);
-      throw e;
-    }
-  },
-  decryptContent: function(data, password) {
-    var cyphered = localStorage.getItem(HUBBER_SC_KEY);
-    var bytes = CryptoJS.AES.decrypt(cyphered, password);
-    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    console.log(decryptedData);
-    return decryptedData;
   },
   handlePending: function() {
     handlePendingSignIn().then(function() {
