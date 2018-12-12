@@ -4,6 +4,7 @@ import { getFile, putFile } from "blockstack";
 const HUBBER_API_DATA_KEY = "HUBBER_API_DATA_KEY";
 const HUBBER_LIVE_GAIA_KEY = "HUBBER_LIVE_GAIA_KEY";
 const HUBBER_ACTIVE_GAIA_KEY = "HUBBER_ACTIVE_GAIA_KEY";
+const HUBBER_TEST_FILE = "hubber_test.json";
 
 const hubberService = {
   stashApiData: function(data, password) {
@@ -38,7 +39,7 @@ const hubberService = {
       test: "test storing a file in user storage via gaia",
       random: Math.random().toString(36)
     };
-    putFile("gaia_store_test.json", JSON.stringify(data), {
+    putFile(HUBBER_TEST_FILE, JSON.stringify(data), {
       encrypt: false
     })
       .then(function(message) {

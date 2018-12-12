@@ -4,7 +4,8 @@
     <md-dialog :md-active.sync="reloadDialog">
       <md-dialog-title>Config Uploaded</md-dialog-title>
       <md-dialog-content>Clicking 'Reload Hub' will activate your new settings. We will test the
-      the new settings by writing a file to your storage. The 'sync' icon (top right of the form)
+      the new settings by writing a file to your storage.
+      <br><br>The '<md-icon>sync</md-icon>' icon (top right of the form)
       can be used to reload the original config file.</md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click="reloadHub">Reload Hub</md-button>
@@ -81,7 +82,7 @@
       <md-checkbox v-model="gaiaConfig.requireCorrectHubUrl">Require Valid Hub Urls</md-checkbox>
     </div>
   </div>
-  <div class="md-layout-item md-size-100 md-xsmall-size-100" v-if="gaiaConfig">
+  <div class="md-layout-item md-size-100 md-xsmall-size-100" v-if="gaiaConfig.requireCorrectHubUrl">
     <md-field>
       <label>Hub Urls - auth requests correctly include the hubURL they are trying to connect with.</label>
       <md-input v-model="gaiaConfig.validHubUrls" type="text"></md-input>
@@ -224,7 +225,7 @@ export default {
         .dispatch("hubberStore/reloadGaiaHub")
         // eslint-disable-next-line
         .then(message => {
-          this.hubMessage = message;
+          this.hubMessage = "hubber_test.json: " + message;
           this.reloadResultDialog = true;
           // eslint-disable-next-line
       }).catch(e => {
@@ -281,14 +282,17 @@ export default {
           this.gaiaConfig.pageSize = pageSize;
         }
 
-        let validHubUrls = this.gaiaConfig.validHubUrls;
-        if (!validHubUrls || validHubUrls.length === 0) {
-          this.gaiaConfig.validHubUrls = [];
+        let requireCorrectHubUrl = this.gaiaConfig.requireCorrectHubUrl;
+        if (requireCorrectHubUrl) {
+          if (!this.gaiaConfig.validHubUrls || this.gaiaConfig.validHubUrls.length === 0) {
+            this.errors.push("Please list the urls (space separated) allowed to make requests to this hub.");
+          } else {
+            this.gaiaConfig.validHubUrls = validHubUrls.split(" ");
+          }
         } else {
-          this.gaiaConfig.validHubUrls = validHubUrls.split(" ");
+          this.gaiaConfig.validHubUrls = [];
         }
 
-        // this.gaiaConfig.requireCorrectHubUrl = false;
         let whiteList = this.gaiaConfig.whiteList;
         if (!whiteList || whiteList.length === 0) {
           this.gaiaConfig.whiteList = [];
