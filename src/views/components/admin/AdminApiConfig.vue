@@ -8,7 +8,7 @@ hubber<template>
     </div>
     <md-field>
       <label>{{passwordMessage}}</label>
-      <md-input v-model="password" type="password" placeholder="password for encrypting your data" v-on:blur="decryptApiData" @keyup.enter="decryptApiData"></md-input>
+      <md-input v-model="password" type="password" placeholder="Password for encrypting api data" v-on:blur="decryptApiData" @keyup.enter="decryptApiData"></md-input>
     </md-field>
     <md-field>
       <label>Url for accessing your administrative side car</label>

@@ -1,6 +1,23 @@
-# hubber
+# Hubber
 
-> Hubber - Gaia Hub Administration.
+- [Introduction](#introduction)
+- [Build](#build-setup)
+- [Purpose](#purpose)
+- [Environment](#test-environment)
+- [Todo](#todo)
+
+## Introduction
+
+An application for managing the settings of a Gaia Hub. 
+
+The references for this application are;
+
+1. General background - [Blockstack](https://blockstack.org) 
+2. The request for this application - [in this forum post](https://forum.blockstack.org/t/help-wanted-makers-gaia-administration-application/6798) 
+3. The [Gaia Admin Service](https://github.com/blockstack/gaia/tree/develop/admin) specification (currently on on the develop branch).
+4. The [Gaia Hub](https://github.com/blockstack/gaia/tree/master) specification and
+
+The test application is [gaia_admin.brightblock.org](https://gaia_admin.brightblock.org/#/).
 
 ## Build Setup
 
@@ -13,208 +30,50 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
-
-Applciation for managing the settings of a Gaia Hub (see [Blockstack](https://blockstack.org) for more info).
-
-## Table of Contents
-
-- [Purpose](#purpose)
-- [Privacy](#privacy)
-- [Configuration](#configuration)
-- [Domains](#domains)
-- [Index API](#index-api)
-- [Search API](#search-api)
 
 ## Purpose
 
-Provides customisable search index of user data for decentralised applications. Marketplaces and auctions are
-key examples where specialised search results and filters form the backbone to the rest of the platforms functionality.
-This component provides a way of indexing decentralised user data in an open and transparent way that allows fair
-competition between d-apps and users to evolve.
+Works with the Gaia Admin Service to configure and reload a Gaia Hub. The Gaia Admin Service is a small server 
+side component which is colocated with the users Gaia Hub.
 
-The indexer starts from a decentralised blockstack user identity. It pulls the apps the user has visited and
-indexes data whose app domain matches one of the domains in the yaml configuration of the indexer.
+Given the location (URL) of a users gaia hub admin service and an API key this application talks to the
+Admin Services API end points to manage the hub.
 
-The indexer can be forked from [open source repository](https://github.com/mjoecohen/brightblock-search). Or can be
-used via;
+## Test Environment
 
-1. shared hosting model - add new d-app domain in configuration,
-2. siloed hosting - pull and run with docker.
+All services run either directly or via docker on a Debian stretch VM.
+Nginx proxies requests and terminates ssl for the Gaia services. 
 
-## Privacy
-
-The indexer can only access unencrypted user data which is publicly visible by default. The intention is to only index data in specific
-fields such as 'title', 'description', 'keywords' and possibly some name/value pairs to enable some advanced range search and filtering.
-It's hoped the community can help standardise both the formats and the allowed fields in such a way that this develops
-transparently to end users going forward - for example standardising end points that enable users to removed their data from index in a straightforward manner.
-
-## Configuration
-
-The data to index is configured via yaml. For example the following chunk of yaml;
-```spring:
-    profiles: staging
-application:
-   blockstackBase: https://core-staging.brightblock.org
-   domains:
-      -  domain: localhost
-         indexFiles:
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - id
-            - title
-            - description
-            - keywords
-      -  domain: www.brightblock.org
-         indexFiles:
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - id
-            - title
-            - description
-            - keywords
-```
-will attempt to index data stored under two domains 'localhost' and 'www.brightblock.org'. On finding users who have visited these
-domains it will read from gaia storage the files;
-- records_v01.json
-- auctions_v01.json
-
-and within these files it will expect to find an array of json objects at the root of the file in format;
+The end points for the hub and admin service are;
 
 ```
-records [
-	{ id: 'some id', title: 'some title', description: 'some description' ...
-]
+https://gaia_hub.brightblock.org/hub_info
+
+https://gaia_sidecar.brightblock.org
 ```
 
-ignoring any other content. This data will then be indexed in a lucene index with the id as a key along with the domain and object type.
-
-The config value for parameter 'blockstackBase' indicates the blockstack node to ask for user data from. In the hosted version this is a
-blockstack node running on the same server as the search micro-service.
-
-## Index API
-
-> value = "/index/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Clears the index out - temporary method for developemnt and test.
-
-> value = "/index/pages/{from}/{to}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Index blockstack names between the pages indicated calls pulls names from [Blockstack API](https://core.blockstack.org/) and then
-updates the index for domain matches between user apps and domains in the yaml config.
-
-> value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Index blockstack names - comma separated list.
-
-> value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Index blockstack names - comma separated list.
-
-> value = "/index/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Add the given indexable object to the index. Post data:
+Gaia Admin Service running as a node js application from the develop branch of the Gaia Hub github repository.
 
 ```
-{
-	title: '',
-	description: '',
-	keywords: '',
-	owner: '', // blockstack id of the owner of the record
-	objType: '...',  // in art project these are one of ['auction', 'artwork'] for specific searchs
-	domain: '...',  // the domain of the d-app
-}
+nohup node $HUB_HOME/admin/lib/index.js /tmp/gaia-admin.json >/dev/null 2>&1 &
+API_KEY=potatoes
 ```
 
-> value = "/index/removeRecord/{field}/{value}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Remove the given record from the index.
+A Gaia Hub running from master via docker;
 
 ```
-field = 'id'
-value = 'value of unique identifier'
+docker run -d --restart=always -v $HUB_HOME/hub/config.json:/src/hub/config.json -p 3000:3000 -e CONFIG_PATH=/src/hub/config.json quay.io/blockstack/gaia-hub:latest
 ```
+ 
 
-Note: this needs more information as single identifier can't be relied on to locate a record uniquely with multiple domains.
+Given the location (URL) of a users gaia hub admin service and an API key this application talks to the
+Admin Services API end points to manage the hub.
 
+## Todo
 
-## Search API
+The following are needed before this is ready for production..
 
-> value = "/index/names/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Fetches all user names so far added to the index - useful for test and dev.
-
-> value = "/index/dapps/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Fetches all d-app records so far added to the index - useful for test and dev.
-
-> value = "/index/names/query/{field}?q=query_string", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Query the names index. For example if field='apps' and query_string='your domain' this will return the users who have logged in to
-your domain.
-
-> value = "/index/dapps/{domain}/{objType}/{field}?q=query_string", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Query the dapps index. For example if field='title' and query_string='hallo sailor' this will return all records of type 'objType'
-under domain 'domain' whose title contains the full text indexed search words.
-
-## Domains
-
-### Add Blockstack Id(s) to Index
-
-## Examples
-
-### Add Blockstack Id(s) to Index
-
-> https://search.brightblock.org/index/users/mike.personal.id,brightblock.id
-
-```
-{
-"failed": false,
-"timestamp": 1542796896542,
-"httpStatus": "OK",
-"details": "Indexing users: [mike.personal.id, brightblock.id] in background.",
-"message": "Success!"
-}
-```
-
-
-> https://search.brightblock.org/index/dapps/staging.transit8.com/artwork/description?q=capitals
-
-```
-{
-"failed": false,
-"timestamp": 1542727510888,
-"httpStatus": "OK",
-"details": [
-{
-"id": "1540550024050",
-"title": "Living in the alley",
-"description": "Block capitals on brick",
-"owner": "mike.personal.id",
-"objType": "artwork",
-"domain": "staging.transit8.com",
-"keywords": "Photography,Illustration.3D,2D,Film & Video,Mix-media"
-}
-],
-"message": "Success!"
-}
-```
+1. Review against Blockstack functional requirements.
+2. Form validation and use of vuelidate.
+2. Testing (unit, e2e and manual testing is required)

@@ -7,7 +7,7 @@
     <div class="container">
       <nav></nav>
       <div class="copyright">
-        &copy; {{ year }}, with <md-icon>favorite</md-icon> OpenArtem.
+        &copy; {{ year }}, with <md-icon>favorite</md-icon>&nbsp; <a href="https://www.brightblock.org">brightblock.org</a>.
       </div>
     </div>
   </footer>
