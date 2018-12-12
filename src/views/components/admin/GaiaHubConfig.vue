@@ -2,12 +2,10 @@
 <form novalidate class="md-layout" @submit.prevent="validate">
   <div>
     <md-dialog :md-active.sync="reloadDialog">
-      <md-dialog-title>Config Uploaded - Reload Hub</md-dialog-title>
-      <md-dialog-content>{{hubMessage}}</md-dialog-content>
+      <md-dialog-title>Config Uploaded</md-dialog-title>
       <md-dialog-content>Clicking 'Reload Hub' will activate your new settings. We will test the
-      the new settings by writing a file to you storage. If something is wrong with the
-      new settings you'll be given an option to reload the original settings.</md-dialog-content>
-      <md-dialog-content>Clicking 'Revert' will switch your hub back to the original settings.</md-dialog-content>
+      the new settings by writing a file to your storage. The 'sync' icon (top right of the form)
+      can be used to reload the original config file.</md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click="reloadHub">Reload Hub</md-button>
       </md-dialog-actions>

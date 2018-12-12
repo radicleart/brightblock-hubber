@@ -40,10 +40,22 @@ side component which is colocated with the users Gaia Hub.
 Given the location (URL) of a users gaia hub admin service and an API key this application talks to the
 Admin Services API end points to manage the hub.
 
+## Prerequisites
+
+User must be logged in with a blockstack id to use this application (strictly this is only required for testing the
+operation of the new Gaia settings).
+
+The blockstack setting [here](http://localhost:8888/account/api) for "URL for Gaia Hub Connection" must be set to the url of the users
+Gaia Hub in this case - https://gaia_hub.brightblock.org.
+
+To test you need to have the Admin Service running - see next section.
+
 ## Test Environment
 
-All services run either directly or via docker on a Debian stretch VM.
-Nginx proxies requests and terminates ssl for the Gaia services. 
+This applciation has been built using a cloud hosted Debian stretch VM with services running directly or via 
+docker containers.
+
+The Gaia end points are proxied via nginx web server which also terminates ssl. 
 
 The end points for the hub and admin service are;
 
@@ -53,14 +65,14 @@ https://gaia_hub.brightblock.org/hub_info
 https://gaia_sidecar.brightblock.org
 ```
 
-Gaia Admin Service running as a node js application from the develop branch of the Gaia Hub github repository.
+Gaia Admin Service running as a node js application (from the develop branch of the Gaia Hub github repository).
 
 ```
-nohup node $HUB_HOME/admin/lib/index.js /tmp/gaia-admin.json >/dev/null 2>&1 &
+nohup node $HUB_HOME/admin/lib/index.js /tmp/gaia-admin.json &
 API_KEY=potatoes
 ```
 
-A Gaia Hub running from master via docker;
+Gaia Hub running via docker;
 
 ```
 docker run -d --restart=always -v $HUB_HOME/hub/config.json:/src/hub/config.json -p 3000:3000 -e CONFIG_PATH=/src/hub/config.json quay.io/blockstack/gaia-hub:latest
