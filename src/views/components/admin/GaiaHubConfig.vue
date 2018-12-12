@@ -283,9 +283,13 @@ export default {
         }
 
         let requireCorrectHubUrl = this.gaiaConfig.requireCorrectHubUrl;
+        let validHubUrls = this.gaiaConfig.validHubUrls;
         if (requireCorrectHubUrl) {
-          if (!this.gaiaConfig.validHubUrls || this.gaiaConfig.validHubUrls.length === 0) {
-            this.errors.push("Please list the urls (space separated) allowed to make requests to this hub.");
+          if (!validHubUrls || validHubUrls.length === 0) {
+            this.errors.push(
+              "Please list the urls (space separated) " +
+                "allowed to make requests to this hub."
+            );
           } else {
             this.gaiaConfig.validHubUrls = validHubUrls.split(" ");
           }
