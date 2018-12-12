@@ -13,9 +13,9 @@ An application for managing the settings of a Gaia Hub.
 The references for this application are;
 
 1. General background - [Blockstack](https://blockstack.org) 
-2. The request for this application - [in this forum post](https://forum.blockstack.org/t/help-wanted-makers-gaia-administration-application/6798) 
+2. Application spec, see [this forum post](https://forum.blockstack.org/t/help-wanted-makers-gaia-administration-application/6798) 
 3. The [Gaia Admin Service](https://github.com/blockstack/gaia/tree/develop/admin) specification (currently on on the develop branch).
-4. The [Gaia Hub](https://github.com/blockstack/gaia/tree/master) specification and
+4. The [Gaia Hub](https://github.com/blockstack/gaia/tree/master) specification.
 
 The test application is [gaia_admin.brightblock.org](https://gaia_admin.brightblock.org/#/).
 
