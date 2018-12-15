@@ -1,4 +1,3 @@
-// myAccountStore.js
 import myAccountService from "@/services/myAccountService";
 
 const myAccountStore = {
